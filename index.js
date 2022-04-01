@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
     res.render('index', data);
 
 });
-app.listen(3000, function () {
+app.listen(process.env.PORT||3000, function () {
     mailReader.initMailReader()
     console.log('listening to port 4000')
 });
