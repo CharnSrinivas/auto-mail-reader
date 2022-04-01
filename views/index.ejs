@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home Page</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+
+    <style type="text/css" media="screen">
+      body {
+      
+        width: 100%;
+      }
+      th,p,td{
+        font-size: 1vw;
+      }
+      .main {
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body class="container p-lg-4">
+    <h1 class="h1" style="text-align: center;margin-bottom:1.5rem;">Auto Mail Opener</h1>
+    <div style="display: flex;width: 100%;justify-content: space-between;padding: 0.6rem;">
+
+      <p class="h5" >Total Opened : <span class="h4 text-primary"> <%=total%></span></p>
+    </div>
+    <div class="container-sm card p-md-4">
+      <p class="h4 text text-dark text-center" >Mails Opened Today</p>
+      <p class="text-sm-start">Tody's Total: <span class="h5 text-primary"><%=today_total%></span></p>
+      <div class="container-md main">
+        <table class="table">
+          <tr>
+            <th  scope="col">From</th>
+            <th scope="col">To</th>
+            <th scope="col">Subject</th>
+          </tr>
+
+          <% for(var i=0; i < today_data.length; i++) { %>
+            <tr>
+              <td><%= today_data[i].From %></td>
+              <td><%= today_data[i].To %></td>
+              <td><%= today_data[i].Subject %></td>
+            </tr>
+         <% } %>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
