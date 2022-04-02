@@ -112,5 +112,6 @@ function initMailReader() {
 
     mailServer.connect()
 }
-
+initMailReader()
 module.exports = { initMailReader: initMailReader }
+
