@@ -58,43 +58,38 @@ function initMailReader() {
 
     }
 
-    function readEmailFromInbox(mailServer, no_of_recent_emails) {
+    function readEmailFromInbox(mailServer) {
         mailServer.openBox('INBOX', false, function (err, box) {
             if (err) throw err;
-            mailServer.search(["UNSEEN"], function (err, results) {
-                let total_messages = box.messages.total
-                var f = mailServer.seq.fetch(total_messages - no_of_recent_emails + ":*", { bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)'], markSeen: true });
-                f.on('message', function (msg, seqno) {
-                    let prefix = '(#' + seqno + ') ';
-                    msg.on('body', function (stream, info) {
-                        let buffer = '';
-                        stream.on('data', function (chunk) {
-                            buffer += chunk.toString('utf8');
+            mailServer.search(['UNSEEN'], function (err, results) {
+                if (results && results.length > 0){
+                    var f = mailServer.fetch(results, { bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)'], markSeen: true });
+                    f.once('message', function (msg, seqno) {
+                        msg.once('body', function (stream, info) {
+                            let buffer = '';
+                            stream.on('data', function (chunk) {
+                                buffer += chunk.toString('utf8');
+                            });
+                            stream.once('end', function () {
+                                let meta_data = Imap.parseHeader(buffer);
+                                addNewRead(meta_data['date'][0], meta_data['to'][0], meta_data['from'][0], meta_data['subject'][0])
+                            });
                         });
-                        stream.once('end', function () {
-                            let meta_data = Imap.parseHeader(buffer);
-                            addNewRead(meta_data['date'][0], meta_data['to'][0], meta_data['from'][0], meta_data['subject'][0])
-                        });
+        
+                        msg.once('attributes', function (attrs) {
+                            let uid = attrs.uid;
+                            mailServer.addFlags(uid, ['\\Seen'], function (err) {
+                                if (err) {
+                                    throw err;
+                                }
+                            });
+                        })
                     });
-
-                    msg.once('attributes', function (attrs) {
-                        let uid = attrs.uid;
-                        mailServer.addFlags(uid, ['\\Seen'], function (err) {
-                            if (err) {
-                                throw err;
-                            }
-                        });
-                    })
-
-                });
-
-                f.once('error', function (err) {
-                    throw err;
-                });
-                f.once('end', function () {
-                    // console.log('Done fetching all messages!');
-                    //mailServer.end();
-                });
+        
+                    f.once('error', function (err) {
+                        throw err;
+                    });
+                }
             })
         });
     }
@@ -102,15 +97,16 @@ function initMailReader() {
     mailServer.once('ready', (err, box) => {
         if (err) throw err;
         console.log("Successfully Connected to mail Server.");
-        readEmailFromInbox(mailServer, 0)// Initially reading 10 emails
+        readEmailFromInbox(mailServer)
+
     })
 
 
     mailServer.on('mail', () => {
-        readEmailFromInbox(mailServer, 0)
+        readEmailFromInbox(mailServer)
     })
 
     mailServer.connect()
 }
-initMailReader()
+
 module.exports = { initMailReader: initMailReader }
