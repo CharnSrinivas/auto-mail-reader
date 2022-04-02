@@ -114,4 +114,3 @@ function initMailReader() {
 }
 initMailReader()
 module.exports = { initMailReader: initMailReader }
-
