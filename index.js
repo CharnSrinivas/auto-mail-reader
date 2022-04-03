@@ -15,10 +15,12 @@ app.get('/', (req, res) => {
     let today_date = new Date().toLocaleDateString().replaceAll('/', '-');
     let meta_file_path = `${__dirname}/data/meta.json`;
     let today_file_path = `${__dirname}/data/${today_date}.json`;
-    if (!(fs.existsSync(meta_file_path) && fs.existsSync(today_file_path))) { res.render("404");return }
+    if (!(fs.existsSync(meta_file_path))) {
+        res.render("404"); return
+    }
     let raw_meta_data = fs.readFileSync(meta_file_path);
-    let today_raw_data = fs.readFileSync(today_file_path);
-    let today_data = JSON.parse(today_raw_data);
+    let today_raw_data = fs.existsSync(today_file_path) ? fs.readFileSync(today_file_path) : '[]';
+    let today_data =  JSON.parse(today_raw_data) ;
     let meta_data = JSON.parse(raw_meta_data);
 
     const data = {
@@ -29,7 +31,7 @@ app.get('/', (req, res) => {
     res.render('index', data);
 
 });
-app.listen(process.env.PORT||3000, function () {
+app.listen(process.env.PORT || 3000, function () {
     mailReader.initMailReader()
-    console.log('listening to port 4000')
+    console.log('listening to port 3000')
 });

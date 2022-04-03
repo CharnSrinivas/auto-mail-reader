@@ -16,10 +16,11 @@
 
     <style type="text/css" media="screen">
       body {
-      
         width: 100%;
       }
-      th,p,td{
+      th,
+      p,
+      td {
         font-size: 1vw;
       }
       .main {
@@ -33,30 +34,48 @@
   </head>
 
   <body class="container p-lg-4">
-    <h1 class="h1" style="text-align: center;margin-bottom:1.5rem;">Auto Mail Opener</h1>
-    <div style="display: flex;width: 100%;justify-content: space-between;padding: 0.6rem;">
-
-      <p class="h5" >Total Opened : <span class="h4 text-primary"> <%=total%></span></p>
-    </div>
+    <h1 class="h1 text-primary" style="text-align: center; margin-bottom: 1.5rem">
+      Auto Mail Opener
+    </h1>
+    <div
+      style="
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        padding: 0.6rem;
+      "
+    >
+  </div>
+  <% if(today_data.length <= 0){ %>
+    <p class="h2 text  text-center text-warning">
+      No Mails Received And Read Today
+    </p>
+    <% }
+    else{ %>
+      <p class="h5">
+        Total Opened : <span class="h4 text-primary"> <%=total%></span>
+      </p>
     <div class="container-sm card p-md-4">
-      <p class="h4 text text-dark text-center" >Mails Opened Today</p>
-      <p class="text-sm-start">Tody's Total: <span class="h5 text-primary"><%=today_total%></span></p>
+      <p class="h4 text text-dark text-center">Mails Opened Today</p>
+      <p class="text-sm-start">
+        Tody's Total: <span class="h5 text-primary"><%=today_total%></span>
+      </p>
       <div class="container-md main">
         <table class="table">
           <tr>
-            <th  scope="col">From</th>
+            <th scope="col">From</th>
             <th scope="col">To</th>
             <th scope="col">Subject</th>
           </tr>
-
           <% for(var i=0; i < today_data.length; i++) { %>
-            <tr>
-              <td><%= today_data[i].From %></td>
-              <td><%= today_data[i].To %></td>
-              <td><%= today_data[i].Subject %></td>
-            </tr>
-         <% } %>
+          <tr>
+            <td><%= today_data[i].From %></td>
+            <td><%= today_data[i].To %></td>
+            <td><%= today_data[i].Subject %></td>
+          </tr>
+          <% } %>
         </table>
+        <% } %>
       </div>
     </div>
   </body>
